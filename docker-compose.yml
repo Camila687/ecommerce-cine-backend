@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: cinedb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - cine-network
+
+  ecommerce-backend:
+    build: .
+    container_name: ecommerce-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/cinedb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password123
+    depends_on:
+      - mysql-db
+    networks:
+      - cine-network
+
+volumes:
+  mysql_data:
+
+networks:
+  cine-network:
