@@ -1,14 +1,12 @@
 package com.cine.ecommerce_backend.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cine.ecommerce_backend.model.Candy;
 import com.cine.ecommerce_backend.service.CandyService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +22,13 @@ public class CandyController {
 
     @Operation(summary = "Listar dulces", description = "Devuelve una lista de productos de la dulcería.")
     @GetMapping
-    public ResponseEntity<List<Candy>> listarCandys() {
-        return ResponseEntity.ok(candyService.obtenerCandys());
+    public ResponseEntity<?> listarCandys() {
+        try {
+            return ResponseEntity.ok(candyService.obtenerCandys());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
     }
 }

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cine.ecommerce_backend.model.PaymentRequest;
 import com.cine.ecommerce_backend.service.PayUService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import reactor.core.publisher.Mono;
+
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/complete")
@@ -22,21 +24,24 @@ public class CompleteController {
     private PayUService payUService;
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> completarPago(@RequestBody PaymentRequest request) {
-        try {
-            Map<String, Object> respuesta = payUService.procesarPago(request).block(); // bloqueamos el Mono para simplificar
-
-            Map<String, Object> respuestaFinal = new HashMap<>();
-            respuestaFinal.put("codigoRespuesta", "0");
-            respuestaFinal.put("mensaje", "Transacción exitosa");
-            respuestaFinal.put("datosPayU", respuesta);
-
-            return ResponseEntity.ok(respuestaFinal);
-        } catch (Exception e) {
-            Map<String, Object> error = new HashMap<>();
-            error.put("codigoRespuesta", "1");
-            error.put("mensaje", "Error en la transacción: " + e.getMessage());
-            return ResponseEntity.status(500).body(error);
-        }
+    public Mono<ResponseEntity<Map<String, Object>>> completarPago(@RequestBody PaymentRequest request) {
+        
+        return payUService.procesarPago(request)
+            .map(respuesta -> {
+                Map<String, Object> respuestaFinal = new HashMap<>();
+                respuestaFinal.put("codigoRespuesta", "0");
+                respuestaFinal.put("mensaje", "Transacción exitosa");
+                respuestaFinal.put("datosPayU", respuesta);
+                
+                return ResponseEntity.ok(respuestaFinal);
+            })
+            .onErrorResume(e -> {
+                e.printStackTrace();
+                Map<String, Object> error = new HashMap<>();
+                error.put("codigoRespuesta", "1");
+                error.put("mensaje", "Error en la transacción: " + e.getMessage());
+                
+                return Mono.just(ResponseEntity.status(500).body(error));
+            });
     }
 }

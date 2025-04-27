@@ -4,14 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedStoredProcedureQuery;
+import jakarta.persistence.Table;
 
 @Entity
-@NamedStoredProcedureQuery(
-    name = "Candy.listarCandy",
-    procedureName = "sp_listar_candystore",
-    resultClasses = Candy.class
-)
+@Table(name = "candystore")
 public class Candy {
 
     @Id

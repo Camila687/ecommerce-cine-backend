@@ -68,5 +68,18 @@ public class PaymentRequest {
         this.numeroDocumento = numeroDocumento;
     }
 
+    @Override
+    public String toString() {
+        return "PaymentRequest{" +
+                "numeroTarjeta='" + numeroTarjeta + '\'' +
+                ", fechaExpiracion='" + fechaExpiracion + '\'' +
+                ", cvv='" + cvv + '\'' +
+                ", correo='" + correo + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
+                '}';
+    }
+
 
 }

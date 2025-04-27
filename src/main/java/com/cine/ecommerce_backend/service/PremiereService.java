@@ -1,5 +1,6 @@
 package com.cine.ecommerce_backend.service;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ public class PremiereService {
     private PremiereRepository premiereRepository;
 
     public List<Premiere> obtenerPremieres() {
-        return premiereRepository.listarPremieres();
+        return premiereRepository.findAll();
     }
-    
 }
