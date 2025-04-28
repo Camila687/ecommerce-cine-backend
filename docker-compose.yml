@@ -14,7 +14,7 @@ services:
       - cine-network
 
   ecommerce-backend:
-    build: .
+    build: ./ruta-del-backend
     container_name: ecommerce-backend
     ports:
       - "8080:8080"
@@ -24,6 +24,16 @@ services:
       SPRING_DATASOURCE_PASSWORD: password123
     depends_on:
       - mysql-db
+    networks:
+      - cine-network
+
+  ecommerce-frontend:
+    build: ./ruta-del-frontend
+    container_name: ecommerce-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - ecommerce-backend
     networks:
       - cine-network
 
